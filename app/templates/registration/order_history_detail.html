@@ -1,0 +1,96 @@
+{% extends 'registration/base.html' %}
+{% load static %}
+{% block title %} Orders history {% endblock %}
+{% block context %}
+    <h1>Order {{ order.id }}</h1>
+    <table>
+        <tr>
+            <th>Date</th>
+            <td>{{ order.created }}</td>
+        </tr>
+        <tr>
+            <th>Customer</th>
+            <td>{{ order.first_name }} {{ order.last_name }}</td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td>{{ order.address }}</td>
+        </tr>
+        <tr>
+            <th>Total sum</th>
+            <td>₴{{ order.get_total_price|floatformat:"2" }}</td>
+        </tr>
+        <tr>
+            <th>Promocode</th>
+            {% if order.promocode %}
+            <td>{{ order.promocode }} ({{ order.discount }}%)</td>
+            {% else %}
+            <td> - </td>
+            {% endif %}
+        </tr>
+        <tr>
+            <th>Delivery status</th>
+            <td>{{ order.status }}</td>
+        </tr>
+        <tr>
+            <th>Payment status</th>
+            {% if order.paid %}
+            <td>Paid</td>
+            {% else %}
+            <td>Pending payment</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <th>Note</th>
+            {% if order.note %}
+            <td>{{ order.note }}</td>
+            {% else %}
+            <td> - </td>
+            {% endif %}
+        </tr>
+        <tr>
+            <th>Courier</th>
+            <td>{{ order.courier }}<br> {{ order.courier.telephone }}</td>
+        </tr>
+    </table>
+    {% if order.status == "delivered" %}
+    <br />
+    <p><button class="btn btn-primary" id="SendBtn" name="SendBtn" onclick="showFormReview()">Add review</button></p>
+        <div id="hidden-div" class="d-none">
+            <div class="card card-body mt-2">
+                <form action="." id="form-review" class="d-none" method="post">
+                    {{ form.as_p }}
+                    {% csrf_token %}
+                    <p><button class="btn btn-primary" type="submit">Send review</button></p>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    <hr>
+    <p>Products</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Restaurant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in orderitem %}
+            <tr>
+                <td>{{ item.quantity }}x {{ item.product }}</td>
+                <td>₴{{ item.get_cost|floatformat:"2" }} (₴{{ item.price|floatformat:"2" }})</td>
+                <td>{{ item.get_shop }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total-sum">
+                <td>Total sum without discount</td>
+                <td colspan="1"></td>
+                <td class="num">
+                ₴{{ order.get_total_price_without_discount|floatformat:"2" }}
+            </td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

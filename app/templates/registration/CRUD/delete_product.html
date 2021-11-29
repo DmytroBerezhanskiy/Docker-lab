@@ -1,0 +1,17 @@
+{% extends 'registration/base.html' %}
+{% load static %}
+{% block title %} Create product {% endblock %}
+{% block context %}
+
+<p>Are you sure you want to delete <strong>"{{ product.name }}"</strong> ?</p>
+
+<form action="{% url 'delete_product' product.id product.slug %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input type="submit" value="Confirm">
+    <div style="margin-top: 8px">
+    <a style="margin-left: 30px" href="{% url 'product_list' %}">Cancel</a>
+    </div>
+</form>
+
+{% endblock %} 

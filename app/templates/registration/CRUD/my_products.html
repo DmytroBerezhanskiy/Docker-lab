@@ -1,0 +1,57 @@
+{% extends 'shop/base.html' %}
+{% load custom_tags %}
+{% load static %}
+{% block title %} My products {% endblock %}
+{% block context %}
+
+<div id="sidebar">
+        <h3 style="margin-left: 5px">Actions</h3>
+        <ul>
+            <li>
+                <a href="{% url 'create_product' %}">Add product</a>
+            </li>
+            <li>
+                <a href="{% url 'create_category' %}">Add category</a>
+            </li>
+        </ul>
+    </div>
+<div class="d-flex flex-column" style="margin-right: -5px;">
+{% if products %}
+<div class="row" style="margin-right: 5px">
+      {% for product in products %}
+        <div class="post-item col-12 col-sm-6 col-md-6 col-lg-3 p-2">
+          <div class="card h-100 card-product">
+            <div class="card-body card-flex">
+               <div class="product-image mb-2">
+                <img src="{{ product.image.url }}">
+               </div>
+              <h2 class="card-title">{{ product.name }}</h2>
+              <p class="text-primary"><i class="far fa-calendar-alt"></i>₴{{ product.price}}</p>
+              <p class="card-text">{{product.category|safe | truncatewords:10 }}</p>
+              <p class="card-text"><a href="{{ product.get_shop_slug }}">
+                  {{product.shop|safe | truncatewords:10 }}</a></p>
+              <a href="{{ product.get_absolute_url }}" style="width:100%; margin-bottom: 5px" class="btn btn-outline-primary">Read More</a>
+              {% if request.user.is_authenticated %}
+                {% if request.user|has_shop:product.shop %}
+                <div class="d-flex justify-content-between">
+                <a href="{% url 'update_product' product.id product.slug %}" style="width:50%; margin-right: 5px"
+                   class="btn btn-outline-primary">Update</a>
+                <a href="{% url 'delete_product' product.id product.slug %}" style="width:50%;"
+                   class="btn btn-outline-primary">Delete</a>
+                </div>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% if products %}
+    {% include 'pagination/pagination.html' with page=products %}
+    {% endif %}
+    </div>
+{% else %}
+<p style="font-style:oblique; font-size: 400%">Sorry, there are no products in this collection.</p>
+{% endif %}
+
+{% endblock %}

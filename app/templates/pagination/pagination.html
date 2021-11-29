@@ -1,0 +1,24 @@
+<style>
+    .pagination {
+    margin:0px 10px;
+    font-weight:bold;
+}
+</style>
+
+<div class="pagination">
+ <span class="step-links">
+ {% if page.has_previous %}
+ <a href="{% if 'name=' in request.get_full_path or 'category=' in request.get_full_path %}
+{{ request.get_full_path }}&page={{ page.previous_page_number }}
+{% else %}{{ request.path }}?page={{ page.previous_page_number }}{% endif %}">Previous</a>
+ {% endif %}
+ <span class="current">
+ Page {{ page.number }} of {{ page.paginator.num_pages }}.
+ </span>
+ {% if page.has_next %}
+ <a href="{% if 'name=' in request.get_full_path or 'category=' in request.get_full_path %}
+{{ request.get_full_path }}&page={{ page.next_page_number }}
+{% else %}{{ request.path }}?page={{ page.next_page_number }}{% endif %}">Next</a>
+ {% endif %}
+ </span>
+</div>

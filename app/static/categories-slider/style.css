@@ -1,0 +1,18 @@
+.splide__slide {
+    text-align: center;
+    position: relative;
+}
+
+.splide__slide a {
+    text-decoration: none;
+}
+.splide__slide::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    width: 1px;
+    height: 20px;
+    background-color: #333;
+}

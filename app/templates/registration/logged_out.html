@@ -1,0 +1,8 @@
+{% extends "registration/base.html" %}
+{% block title %}Logged out{% endblock %}
+{% block context %}
+ <h1>Logged out</h1>
+ <p>You have been successfully logged out. 
+ You can also <a href="{% url 'login' %}">log-in</a> again.
+ </p>
+{% endblock %}

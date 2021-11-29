@@ -1,0 +1,106 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load custom_tags %}
+<html>
+<head>
+</head>
+{% block context %}
+<body>
+{% if categories %}
+<div class="splide mb-3">
+        <div class="splide__track">
+            <ul class="splide__list">
+                <li class="splide__slide"><a href="{{ request.path }}">All</a></li>
+                {% for c in categories %}
+                <li class="splide__slide"><a href="{{ request.path }}?category={{ c.id }}">{{ c.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endif %}
+<form method="get">
+    {{ myFilter.form.non_field_errors }}
+    <div class="d-flex flex-row-reverse justify-content-between align-items-center mx-4">
+        <div class="d-flex">
+            {{ myFilter.form.price_start.errors }}
+            {{ myFilter.form.price_end.errors }}
+            <div class="filter-input d-flex align-items-center filter-price search-input-price">
+                <label for="{{ myFilter.form.price_start.id_for_label }}">Price Range:</label>
+                {{ myFilter.form.price_start }} {{ myFilter.form.price_end }}
+            </div>
+            <button class="btn btn-primary" type="submit">Filter</button>
+        </div>
+        <div class="d-flex align-items-center">
+            {{ myFilter.form.name.errors }}
+            <label for="{{ myFilter.form.name.id_for_label }}">Search:</label>
+            <div class="filter-input search-input">{{ myFilter.form.name }}</div>
+            <button class="btn btn-outline-primary ml-2" type="submit">Search</button>
+        </div>
+        <div>
+            {{ myFilter.form.ordering.errors }}
+            <label for="{{ myFilter.form.ordering.id_for_label }}">Ordering:</label>
+            {{ myFilter.form.ordering }}
+        </div>
+    </div>
+</form>
+<div id="sidebar">
+        <h3>Restaurants</h3>
+        <ul>
+            <li {% if not shop %} class="selected"{% endif %}>
+                <a href="{% url 'product_list' %}">All</a>
+            </li>
+            {% for c in shops %}
+                <li {% if shop.slug == c.slug %} class="selected"{% endif %}>
+                    <a href="{% url 'product_list_by_shop' c.slug%}">{{ c.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+<div class="d-flex flex-column" style="margin-right: -5px;">
+{% if product_list %}
+<div class="row" style="margin-right: 5px">
+      {% for product in product_list %}
+        <div class="post-item col-12 col-sm-6 col-md-6 col-lg-3 p-2">
+          <div class="card h-100 card-product align-items-center {% if not product.available %} gray-bg {% endif %}">
+            <div class="card-body card-flex">
+              <div class="product-image mb-2">
+                <img src="{{ product.image.url }}">
+              </div>
+              <h2 class="card-title">{{ product.name }}</h2>
+              <p class="text-primary"><i class="far fa-calendar-alt"></i>₴{{ product.price}}</p>
+              <p class="card-text">{{product.category|safe | truncatewords:10 }}</p>
+              <p class="card-text"><a href="{{ product.get_shop_slug }}">
+                  {{product.shop|safe | truncatewords:10 }}</a></p>
+              <p class="card-text">{% if product.get_rating.rating__avg %}
+                  Rated at {{ product.get_rating.rating__avg }}/5.0 ({{ product.get_rating_votes }})
+                                    {% else %}Not yet rated{% endif %}</p>
+              {% if product.available %}
+              <div class="d-flex justify-content-between">
+              <a href="{{ product.get_absolute_url }}" style="width:50%; margin-right: 5px" class="btn btn-outline-primary">Read More</a>
+              <a href="javascript:;" onclick="document.getElementById('product-add-{{ product.id }}').submit();"
+                                                                   style="width: 50%" class="btn btn-outline-primary">Buy</a>
+                <form id="product-add-{{ product.id }}" class="hidden"
+                                                action="{% url 'orderlist:orderlist_add' product.id %}" method="post">
+                    {{ form }}
+                    {% csrf_token %}
+                </form>
+              {% else %}
+                <p class="card-text" style="text-align: center; font-size: 20px; font-weight: 600">Non available</p>
+              {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% if product_list %}
+    {% include 'pagination/pagination.html' with page=product_list %}
+    {% endif %}
+    </div>
+{% else %}
+<p style="font-style:oblique; font-size: 400%">Sorry, there are no products in this collection.</p>
+{% endif %}
+</body>
+</html>
+
+{% endblock context %}

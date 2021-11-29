@@ -1,0 +1,30 @@
+{% extends 'shop/base.html' %}
+{% block title %}Checkout{% endblock %}
+{% block context %}
+<h1>Checkout</h1>
+
+<div class="order-info" style="margin-right: 50px; width: 35%">
+    <h3>Your order</h3>
+        <ul>
+        {% for item in orderlist %}
+        <li>
+            {{ item.count }}x {{ item.product.name }}
+            <span>₴{{ item.total_price|floatformat:"2" }}</span>
+        </li>
+        {% endfor %}
+        {% if orderlist.promocode %}
+        <li>
+            <strong>Promocode</strong> "{{ orderlist.promocode.code }}" ({{ orderlist.promocode.discount }}% off)
+            <span>- ₴{{ orderlist.get_discount|floatformat:"2" }} </span>
+        </li>
+        {% endif %}
+        </ul>
+    <p><strong>Total: ₴{{ orderlist.get_total_price_discount|floatformat:"2" }}</strong></p>
+ </div>
+
+<form action="." method="post" class="order-form">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <p><input type="submit" value="Confirm order"></p>
+</form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "registration/base.html" %}
+{% block title %}Create an account{% endblock %}
+{% block context %}
+<h1>Create an account</h1>
+<p>You can sign up by using the following form:</p>
+<form action="." method="post">
+    {{ register_form.as_p }}
+    {% csrf_token %}
+    <div id="hidden-id">
+    {{ shop_form.as_p }}
+    </div>
+    <p><input type="submit" id="register-button" value="Create account"></p>
+</form>
+{% endblock %}

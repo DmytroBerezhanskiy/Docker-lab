@@ -1,0 +1,13 @@
+{% extends 'registration/base.html' %}
+{% load static %}
+{% block title %} Create category {% endblock %}
+{% block context %}
+
+<form action="" style="margin-top: 10px" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <p><input type="submit" value="Create"></p>
+</form>
+
+{% endblock %} 

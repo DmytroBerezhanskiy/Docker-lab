@@ -1,0 +1,43 @@
+{% extends 'registration/base.html' %}
+{% load static %}
+{% block title %} Orders history {% endblock %}
+{% block context %}
+<div style="margin-left: 75px">
+    <h1>Your orders history </h1>
+    <hr>
+    {% if orderhistory %}
+    <table class="order-history" style="width: 95%;">
+        <thead>
+            <tr>
+                <th>Order id</th>
+                <th>Total price</th>
+                <th>Address</th>
+                <th>Data</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orderhistory %}
+            <tr>
+                <td><a href="{% url 'order_detail' order.id %}">{{ order.id }}</a></td>
+                <td>{{ order.get_total_price|floatformat:'2' }}₴</td>
+                <td>{{ order.address }}</td>
+                <td>{{ order.created }}</td>
+                <td>{{ order.status }}
+{#                    {% if order.status == "delivered" %}#}
+{#                        <br/><a href="#">Evaluate</a>#}
+{#                    {% endif %}#}
+                </td>
+            </tr>
+            {% endfor %}
+            <tr class="total-sum">
+                <td colspan="5"></td>
+            </tr>
+        </tbody>
+    </table>
+    {% else %}
+<p style="font-style:oblique; font-size: 400%">Sorry, but you haven't made any orders yet.</p>
+{% endif %}
+</div>
+
+{% endblock %}

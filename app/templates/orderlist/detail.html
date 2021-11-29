@@ -1,0 +1,86 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block title %}
+    Order list
+{% endblock %}
+{% block context %}
+    <h1>Your order list contains</h1>
+    <table class="order-list">
+        <thead>
+        <tr>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Unit price</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in orderlist %}
+            {% with product=item.product %}
+                <tr>
+                    <td>
+                        <a href="{{ product.get_absolute_url }}">
+                            <img src="{{ product.image.url }}">
+                        </a>
+                    </td>
+                    <td>{{ product.name }}</td>
+                    <td class="num">₴{{ item.price }}</td>
+                    <td>
+                        <form action="{% url 'orderlist:orderlist_add' product.id %}" method="post">
+                            {{ item.update_count.count }}
+                            {{ item.update_count.update }}
+                            <input class="order-list" type="submit" value="Update">
+                            {% csrf_token %}
+                        </form>
+                    </td>
+                    <td class="num">₴{{ item.total_price }}</td>
+                    <td><a class="order-list" href="{% url 'orderlist:orderlist_delete' product.id%}">Delete</a></td>
+                </tr>
+            {% endwith %}
+        {% endfor %}
+        {% if orderlist.promocode %}
+            <tr class="subtotal">
+                <td>Total sum without discount</td>
+                <td colspan="3"></td>
+                <td class="num">₴{{ orderlist.get_total_price}}</td>
+                <td colspan="1"></td>
+            </tr>
+            <tr>
+                <td>
+                    Promocode "{{ orderlist.promocode.code }}"
+                    ({{ orderlist.promocode.discount }}% off)
+                </td>
+                <td colspan="3"></td>
+                <td class="num neg">
+                    ₴{{ orderlist.get_discount|floatformat:"2" }}
+                </td>
+                <td colspan="1"></td>
+            </tr>
+        {% endif %}
+        <tr class="total-sum">
+            {% if orderlist.promocode %}
+            <td>Total sum with discount</td>
+            {% else %}
+            <td>Total sum</td>
+            {% endif %}
+            <td colspan="4"></td>
+            <td class="num">
+                ₴{{ orderlist.get_total_price_discount|floatformat:"2" }}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form style="margin-left: 10px" action="{% url "promocode_apply" %}" method="post">
+        <p>Enter the promocode:</p>
+        {{ form }}
+    <input type="submit" value="Apply">
+        {% csrf_token %}
+    </form>
+    <p class="text-right">
+{#        <a href="{{ request.path }}" class="button light">Continue shopping</a>#}
+        <a href="{{ request.META.HTTP_REFERER }}" class="button light">Continue shopping</a>
+        <a href="{% url 'create_order' %}" class="button">Checkout</a>
+    </p>
+{% endblock %}

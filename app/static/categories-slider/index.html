@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+
+    <link rel="stylesheet" href="./splide-2.4.21/dist/css/splide.min.css">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+
+    <h1>Hello, world!</h1>
+
+    <div class="splide">
+        <div class="splide__track">
+            <ul class="splide__list">
+                <li class="splide__slide"><a href="#">Natural</a></li>
+                <li class="splide__slide"><a href="#">GAY</a></li>
+                <li class="splide__slide"><a href="#">BY</a></li>
+                <li class="splide__slide"><a href="#">LESB</a></li>
+                <li class="splide__slide"><a href="#">GAY SITE</a></li>
+                <li class="splide__slide"><a href="#">PYTHON</a></li>
+            </ul>
+        </div>
+    </div>
+  </body>
+
+  <script src="./splide-2.4.21/dist/js/splide.min.js"></script>
+
+  <script>
+	document.addEventListener( 'DOMContentLoaded', function () {
+        new Splide( '.splide', {
+            fixedWidth: 120,
+            rewind    : true,
+            gap       : 5,
+            pagination: false,
+            perPage: 3,
+            type: 'loop',
+	    }).mount();
+	});
+</script>
+
+</html>
