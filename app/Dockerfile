@@ -13,8 +13,4 @@ COPY . .
 
 RUN ["python", "manage.py", "makemigrations"]
 
-RUN ["python", "manage.py", "migrate"]
-
-RUN ["python", "manage.py", "createsuperuserwithpassword", "--username", "admin", "--password", "admin", "--email", "admin@gmail.com", "--preserve"]
-
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
