@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: first-job
+spec:
+  backoffLimit: 5
+  activeDeadlineSeconds: 120
+  template:
+    spec:
+      containers:
+      - name: my-first-job
+        image: container123
+        command: ["python",  "manage.py", "makemigrations"]
+      restartPolicy: Never
